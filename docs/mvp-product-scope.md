@@ -516,3 +516,4 @@ Percentage of users who open a manga detail and begin a chapter.
 - One preferred language is selected by default.
 - The app does not host or redistribute manga content.
 - The product prioritizes reading reliability over visual or feature completeness.
+- Visual UI for MVP follows `docs/ui-contract.md` (native SwiftUI). The Figma file is an incomplete draft for inspiration only: [Manga - Webtoon App (Community) - Copy](https://www.figma.com/design/4jqGCyeCX6b53QLyTr74aS/Manga---Webtoon-App--Community---Copy-).
