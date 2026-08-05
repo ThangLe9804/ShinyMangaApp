@@ -5,7 +5,7 @@
 //  Created by Thang Le on 16/8/25.
 //
 
-import SwiftUICore
+import SwiftUI
 
 extension View {
     func debugBorder(_ color: Color = randomColorProvider(), width: CGFloat = 1) -> some View {
