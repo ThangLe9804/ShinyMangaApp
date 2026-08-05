@@ -131,6 +131,8 @@ Source: [Neko GitHub repository](https://github.com/nekomangaorg/Neko)
 
 Use only MangaDex plus the existing seasonal-list source.
 
+Client request policy (User-Agent, rate limits, pagination caps, 429 handling, credit/acceptable use) is defined in `docs/decisions/ADR-001-ios-architecture.md` §9 — not re-specified per feature.
+
 Why:
 
 - Already aligned with the codebase
@@ -184,7 +186,7 @@ Advanced filters are not required for the MVP.
 
 ### Manga Details
 
-Include:
+Include (end state on **one** title page):
 
 - Cover and title
 - Synopsis
@@ -192,15 +194,20 @@ Include:
 - Tags
 - Publication status
 - Add/remove from local library
-- Chapter list
+- Chapter list (**same screen**, below metadata — not a separate destination)
+
+Delivery note: Search → Detail metadata can ship first; chapter list is added on that same Detail screen before/with Reader.
 
 Why:
 
 - Provides enough information to choose whether to read
 - Bridges discovery and reading
+- Matches expected manga-reader UX (title info + chapters together)
 - Reuses the strongest part of the current Figma draft
 
 ### Chapter List
+
+Lives on the **Manga Detail** screen (not a separate pushed screen).
 
 Include:
 
@@ -462,13 +469,13 @@ Why later:
 
 ## 7. Delivery Order
 
-### 1. Search to Manga Details
+### 1. Search to Manga Detail (title page)
 
-Validate MangaDex metadata and navigation.
+Validate MangaDex metadata and navigation. Detail is the title page; chapters not required yet.
 
-### 2. Manga Details to Chapter List to Reader
+### 2. Chapters on Detail → Reader
 
-Establish the first complete reading session.
+Add chapter list **on the same Detail screen**, then open the reader for a complete reading session.
 
 ### 3. Progress to Local Library to Resume
 
@@ -476,7 +483,7 @@ Establish repeat-use value.
 
 ### 4. Home Discovery
 
-Reuse working title and list components.
+Reuse working title and list components. (App already launches on Home as a thin tab.)
 
 ### 5. Failure States and Release Polish
 
@@ -509,11 +516,15 @@ Percentage of users who open a manga detail and begin a chapter.
 ## 9. Key Assumptions
 
 - iOS is the only initial platform.
+- Minimum deployment target is **iOS 18**.
 - MangaDex is the only catalog and chapter provider.
+- MangaDex traffic obeys ADR-001 §9 (production host, User-Agent, rate limits, collection caps).
 - The app is online-first.
 - Library and progress are stored locally.
 - Vertical scrolling is acceptable as the first reader mode.
 - One preferred language is selected by default.
 - The app does not host or redistribute manga content.
 - The product prioritizes reading reliability over visual or feature completeness.
+- Manga Detail is a single title page; chapter list belongs on that screen (may ship in a later slice than metadata).
+- Default launch tab is Home until Preferences offer a choice.
 - Visual UI for MVP follows `docs/ui-contract.md` (native SwiftUI). The Figma file is an incomplete draft for inspiration only: [Manga - Webtoon App (Community) - Copy](https://www.figma.com/design/4jqGCyeCX6b53QLyTr74aS/Manga---Webtoon-App--Community---Copy-).

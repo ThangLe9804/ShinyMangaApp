@@ -77,20 +77,37 @@ Build only what screens need (start with Search → Details):
 | Piece | Implementation preference |
 |-------|---------------------------|
 | Cover thumbnail | `AsyncImage` + placeholder; fixed aspect (e.g. 2:3) |
-| Search / result row | `List` / `NavigationLink` with cover + title + one metadata line |
-| Loading | Progress indicator or `.redacted` — keep simple |
-| Empty / error | `ContentUnavailableView` + retry when recoverable |
+| Search / result row | `List` / `NavigationLink` with **cover + title only** |
+| Loading (first load) | **Skeleton** via `.redacted(reason: .placeholder)` on stand-in rows / detail layout |
+| Loading more | List footer `ProgressView` — not a full-list skeleton |
+| Empty / error | `ContentUnavailableView` + retry when recoverable (incl. rate-limit failures) |
+| Manga Detail | Single title page: metadata now; **chapter list later on the same screen** |
 | Screen chrome | System nav bar; no floating custom tab chrome until Home polish |
 
+**Skeleton rules:** use system `.redacted` only in MVP — no custom shimmer SPM packages. Skeleton is visual only; it must not cause extra MangaDex requests.
+
 Do **not** invent a component library (buttons, chips, cards kit) before these pieces exist in real screens.
+
+## Network / MangaDex (UI-relevant)
+
+Full client policy: `docs/decisions/ADR-001-ios-architecture.md` §9.
+
+For UI authors:
+
+- Prefer submit-driven refresh over continuous polling
+- On error/429, show retry UI — do not auto-spam the API
+- Credit MangaDex in an About/Settings surface before public builds
+- Skeleton loading must not trigger extra network calls
 
 ## Navigation & chrome
 
 Per ADR-001:
 
 - Root: `TabView` — Home, Search, Library
+- **Default selected tab: Home** (Preferences may change this later)
 - In-tab: `NavigationStack`
 - Prefer system tab bar over draft Figma floating red pill for MVP learning
+- Manga Detail is one screen (title info + future chapters); do not design a separate Chapters destination
 
 Large titles optional on Search/Home; details may use inline title with cover hero.
 
